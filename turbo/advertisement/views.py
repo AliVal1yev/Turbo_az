@@ -8,7 +8,7 @@ from .models import Advertisement
 
 
 def cars(request):
-  ad_cars = Advertisement.objects.all().values()
+  ad_cars = Advertisement.objects.all()
   template = loader.get_template('cars.html')
   context = {
     'ad_cars': ad_cars

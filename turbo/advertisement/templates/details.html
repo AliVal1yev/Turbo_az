@@ -2,14 +2,17 @@
 
 {% block content %}
 
+<img src="{{ ad_cars.image.url }}" alt="image" width="350">
 <h1>{{ ad_cars.name }} {{ ad_cars.model }}</h1>
 <h2>Price: {{ ad_cars.price }} AZN</h2>
 <h2>City: {{ ad_cars.city }} </h2>
 <h2>Category: {{ ad_cars.category }} </h2>
+<h2>Color: {{ ad_cars.color }} </h2>
+<h2>Year: {{ ad_cars.year }} </h2>
+<h2>Fule Type: {{ ad_cars.fuel_type }} </h2>
+<h2>Engine: {{ ad_cars.engine }} </h2>
+<h2>Mileage: {{ ad_cars.mileage }} </h2>
 <h2>Created at: {{ ad_cars.created_at }} </h2>
 <h2>Description: {{ ad_cars.description }} </h2>
-
-
-
 
 {% endblock %}
