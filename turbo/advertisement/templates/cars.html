@@ -1,0 +1,23 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>CARS</h1>
+    <div class="container">
+        <div class="car-listings" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+            {% for car in ad_cars %}
+                <div class="car-listing">
+                    <img src="https://via.placeholder.com/300x200" alt="Car Image">
+                    <h2>{{ car.name }} {{ car.model }}</h2>
+                    <p>{{ car.price }} AZN - {{ car.created_at }}</p>
+                    <a href="{% url 'details' car.id %}"> <button>View Details</button></a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+

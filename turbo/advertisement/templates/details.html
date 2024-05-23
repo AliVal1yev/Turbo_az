@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ ad_cars.name }} {{ ad_cars.model }}</h1>
+<h2>Price: {{ ad_cars.price }} AZN</h2>
+<h2>City: {{ ad_cars.city }} </h2>
+<h2>Category: {{ ad_cars.category }} </h2>
+<h2>Created at: {{ ad_cars.created_at }} </h2>
+<h2>Description: {{ ad_cars.description }} </h2>
+
+
+
+
+{% endblock %}
