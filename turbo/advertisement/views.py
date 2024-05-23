@@ -3,17 +3,18 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import Advertisement
 
+
 # def advertisement(request):
 #     return HttpResponse("Hello world!")
 
 
 def cars(request):
-  ad_cars = Advertisement.objects.all()
-  template = loader.get_template('cars.html')
-  context = {
-    'ad_cars': ad_cars
-  }
-  return HttpResponse(template.render(context, request))
+    ad_cars = Advertisement.objects.all()
+    template = loader.get_template('cars.html')
+    context = {
+        'ad_cars': ad_cars
+        }
+    return HttpResponse(template.render(context, request))
 
 
 def car_details(request, id):
@@ -23,6 +24,7 @@ def car_details(request, id):
     'ad_cars': ad_cars,
   }
   return HttpResponse(template.render(context, request))
+
 
 
 def home(request):

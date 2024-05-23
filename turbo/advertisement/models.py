@@ -14,9 +14,8 @@ class Advertisement(models.Model):
     mileage = models.FloatField(null=True)
     image = models.ImageField(default='fallback.png', blank=True)
     description = models.TextField(max_length=3000)
-    created_at = models.DateTimeField(auto_now_add=True )
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
     def __str__(self) -> str:
         return f'{self.pk}. {self.name} {self.model}'
