@@ -9,8 +9,10 @@
             {% for car in ad_cars %}
                 <div class="car-listing">
                     <img src="{{ car.image.url }}" alt="{{ car.name }}" width="300" height="200">
-                    <h2>{{ car.name }} {{ car.model }}</h2>
-                    <p>{{ car.price }} AZN - {{ car.created_at }}</p>
+                    <h2>{{ car.price  }} AZN</h2>
+                    <h3>{{ car.name }} {{ car.model }}</h3>
+                    <h4>{{ car.year }}, {{ car.engine }} L, {{ car.mileage }} km</h4>
+                    <p>{{ car.created_at|date:"d-m-Y H:i"  }}</p>
                     <a href="{% url 'details' car.id %}"> <button>View Details</button></a>
                 </div>
             {% endfor %}

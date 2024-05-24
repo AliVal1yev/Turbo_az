@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from .models import Advertisement
+from .forms import AdvertisementForm
 
 
 # def advertisement(request):
@@ -9,8 +10,8 @@ from .models import Advertisement
 
 
 def cars(request):
-    ad_cars = Advertisement.objects.all()
-    template = loader.get_template('cars.html')
+    ad_cars = Advertisement.objects.all().order_by('-created_at')
+    template = loader.get_template('advertisement/cars.html')
     context = {
         'ad_cars': ad_cars
         }
@@ -19,7 +20,7 @@ def cars(request):
 
 def car_details(request, id):
   ad_cars = Advertisement.objects.get(id=id)
-  template = loader.get_template('details.html')
+  template = loader.get_template('advertisement/details.html')
   context = {
     'ad_cars': ad_cars,
   }
@@ -28,10 +29,23 @@ def car_details(request, id):
 
 
 def home(request):
-  return render(request, 'home.html')
+  return render(request, 'advertisement/home.html')
 
 def about(request):
-  return render(request, 'about.html')
+  return render(request, 'advertisement/about.html')
 
 def contact(request):
-  return render(request, 'contact.html')
+  return render(request, 'advertisement/contact.html')
+
+
+def add_advertisement(request):
+  if request.method == 'POST':
+    form = AdvertisementForm(request.POST, request.FILES)
+    if form.is_valid():
+      form.save()
+      return redirect('cars')  
+    else:
+        return render(request, 'advertisement/new_ad.html', {'form': form})
+  else:
+      form = AdvertisementForm()
+  return render(request, 'advertisement/new_ad.html', {'form': form})
