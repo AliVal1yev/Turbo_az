@@ -16,6 +16,9 @@ class Advertisement(models.Model):
     description = models.TextField(max_length=3000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    your_name = models.CharField(max_length=32)
+    phone_number = models.IntegerField(null=True)
+    your_email = models.EmailField(max_length=32)
 
     def __str__(self) -> str:
         return f'{self.pk}. {self.name} {self.model}'

@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import Advertisement
 from .forms import AdvertisementForm
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import send_mail
 
 
 # def advertisement(request):
@@ -39,13 +42,30 @@ def contact(request):
 
 
 def add_advertisement(request):
-  if request.method == 'POST':
-    form = AdvertisementForm(request.POST, request.FILES)
-    if form.is_valid():
-      form.save()
-      return redirect('cars')  
+    if request.method == 'POST':
+        form = AdvertisementForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            recipient = form.cleaned_data.get('your_email')
+            if recipient:
+                success, message = mail_message(recipient)
+                if success:
+                    messages.success(request, message)
+                messages.error(request, 'Invalid email address.')
+            return redirect('cars')
     else:
-        return render(request, 'advertisement/new_ad.html', {'form': form})
-  else:
-      form = AdvertisementForm()
-  return render(request, 'advertisement/new_ad.html', {'form': form})
+        form = AdvertisementForm()
+    return render(request, 'advertisement/new_ad.html', {'form': form})
+
+
+def mail_message(email):
+  subject = 'Confirmation'
+  message = 'Your advertisement was added successfully'
+  send_mail(
+      subject,
+      message,
+      settings.EMAIL_HOST_USER,
+      [email],
+      fail_silently=False
+  )
+  return True, 'Email sent successfully!'
