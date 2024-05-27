@@ -12,7 +12,7 @@ class Advertisement(models.Model):
     fuel_type = models.CharField(max_length=32)
     engine = models.FloatField(null=True)
     mileage = models.FloatField(null=True)
-    image = models.ImageField(default='fallback.png', blank=True)
+    image = models.ImageField(default='fallback.png', upload_to='media/%Y/%m/%d', blank=True)
     description = models.TextField(max_length=3000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
