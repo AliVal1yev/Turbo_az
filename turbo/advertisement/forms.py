@@ -7,5 +7,6 @@ class AdvertisementForm(forms.ModelForm):
         fields = [
             'name', 'model', 'price', 'color', 'year', 'city',
             'category', 'fuel_type', 'engine', 'mileage', 'image',
-            'description', 'your_name', 'phone_number', 'your_email'
+            'description', 'your_name', 'phone_number', 'your_email','rear_view',
+            'hatch', 'parking_radar', 'abs'
         ]

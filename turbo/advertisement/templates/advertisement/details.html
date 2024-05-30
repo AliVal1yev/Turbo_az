@@ -14,6 +14,16 @@
 <h2>Mileage: {{ ad_cars.mileage }} km</h2>
 <h2>Created at: {{ ad_cars.created_at|date:"d-m-Y H:i" }} </h2>
 <h2>Description: {{ ad_cars.description }} </h2>
+{% if ad_cars.rear_view %}
+    <h2>Rear view Camera: Yes</h2>
+{% endif %}
+{% if ad_cars.abs %}
+    <h2>ABS: Yes </h2>
+{% else %}
+    <h2>ABS: NO </h2>
+{% endif %}
+<h2>Hatch: {{ ad_cars.hatch }} </h2>
+<h2>Parking Radar: {{ ad_cars.parking_radar }} </h2>
 <h1>Contact info</h1>
 <h2>Name: {{ ad_cars.your_name }}</h2>
 <h2>Phone Number: {{ ad_cars.phone_number }}</h2>
