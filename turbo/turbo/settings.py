@@ -90,7 +90,6 @@ WSGI_APPLICATION = 'turbo.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-<<<<<<< HEAD
      'default': {
          'ENGINE': 'django.db.backends.sqlite3',
          'NAME': BASE_DIR / 'db.sqlite3',
@@ -108,17 +107,6 @@ DATABASES = {
      #  'PORT': '5432',
    #}
 #}
-=======
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'turbo.az',
-       'USER': 'postgres',
-       'PASSWORD':'Ali123',
-       'HOST': 'localhost',
-       'PORT': '5432',
-   }
-}
->>>>>>> 01635bf9afb4f7ca151e1b7491329ad2fdd07306
 
 
 # Password validation
