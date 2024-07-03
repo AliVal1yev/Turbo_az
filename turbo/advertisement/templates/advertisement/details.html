@@ -2,7 +2,12 @@
 
 {% block content %}
 
-<img src="{{ ad_cars.image.url }}" alt="image" width="450">
+<div class="col-md-4">
+    <h3>Images</h3>
+    {% for image in ad_cars.images.all %}
+        <img src="{{ image.image.url }}" alt="Car Image" width="300" height="200">
+    {% endfor %}
+</div>
 <h1>{{ ad_cars.name }} {{ ad_cars.model }}</h1>
 <h2>Price: {{ ad_cars.price }} AZN</h2>
 <h2>City: {{ ad_cars.city }} </h2>
@@ -14,18 +19,17 @@
 <h2>Mileage: {{ ad_cars.mileage }} km</h2>
 <h2>Created at: {{ ad_cars.created_at|date:"d-m-Y H:i" }} </h2>
 <h2>Description: {{ ad_cars.description }} </h2>
-{% if ad_cars.rear_view %}
-    <h2>Rear view Camera: Yes</h2>
-{% endif %}
-{% if ad_cars.abs %}
-    <h2>ABS: Yes </h2>
-{% else %}
-    <h2>ABS: NO </h2>
-{% endif %}
-<h2>Hatch: {{ ad_cars.hatch }} </h2>
-<h2>Parking Radar: {{ ad_cars.parking_radar }} </h2>
+
+<h2>Equipments:</h2>
+{% for equip in ad_cars.equipment.all %}
+    <h3>{{ equip.name }}</h3>
+{% endfor %}
+
 <h1>Contact info</h1>
 <h2>Name: {{ ad_cars.your_name }}</h2>
 <h2>Phone Number: {{ ad_cars.phone_number }}</h2>
 <h2>Email adress: {{ ad_cars.your_email }}</h2>
+
+
+<a href="{% url 'delete_car' ad_cars.id %}"><button>Delete</button></a>
 {% endblock %}

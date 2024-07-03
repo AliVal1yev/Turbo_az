@@ -33,7 +33,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'eliveliyev150@gmail.com'
-EMAIL_HOST_PASSWORD = '******'
+EMAIL_HOST_PASSWORD = 'pkgdajmctqdozhlk'
 
 
 ALLOWED_HOSTS = []
@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'turbo.wsgi.application'
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'postgres',
+       'NAME': 'turbo.az',
        'USER': 'postgres',
        'PASSWORD':'Ali123',
        'HOST': 'localhost',

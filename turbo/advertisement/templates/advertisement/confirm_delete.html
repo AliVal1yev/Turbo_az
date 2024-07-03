@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete car</title>
+</head>
+<body>
+    <h1>Are you sure you want to delete this car?</h1>
+    <p>{{ ad.name }} {{ ad.model }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, delete</button>
+        <a href="{% url 'cars' %}">Cancel</a>
+    </form>
+</body>
+</html>

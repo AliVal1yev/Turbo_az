@@ -33,4 +33,9 @@ urlpatterns = [
         views.add_advertisement, 
         name='new_ad'
     ),
+    path(
+        'delete_car/<int:id>/',
+        views.delete_car,
+        name='delete_car'
+    )
 ]
