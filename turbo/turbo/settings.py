@@ -89,24 +89,24 @@ WSGI_APPLICATION = 'turbo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
+'''DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.sqlite3',
          'NAME': BASE_DIR / 'db.sqlite3',
      }
- }
+ }'''
 
 
-#DATABASES = {
-#   'default': {
-#       'ENGINE': 'django.db.backends.postgresql',
- #      'NAME': 'postgres',
-  #     'USER': 'postgres',
-   #    'PASSWORD':'Ali123',
-    #   'HOST': 'localhost',
-     #  'PORT': '5432',
-   #}
-#}
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'postgres',
+       'USER': 'postgres',
+       'PASSWORD':'Ali123',
+       'HOST': 'localhost',
+       'PORT': '5432',
+   }
+}
 
 
 # Password validation
@@ -140,6 +140,8 @@ USE_I18N = True
 USE_TZ = True
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+
+
 
 
 # Static files (CSS, JavaScript, Images)

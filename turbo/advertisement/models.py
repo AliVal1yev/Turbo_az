@@ -1,7 +1,28 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
-class Advertisement(models.Model):
+
+class Category(models.Model):
+    name = models.CharField(max_length=32)
+
+    def __str__(self) -> str:
+        return f'{self.name}'
+
+
+class FuelType(models.Model):
+    name =models.CharField(max_length=32)
+
+    def __str__(self) -> str:
+        return f'{self.name}'
+
+class City(models.Model):
+    name = models.CharField(max_length=32)
+    def __str__(self) -> str:
+        return f'{self.name}'
+
+
+class CarAdvertisement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null= True, blank= True)
     name = models.CharField(max_length=32)
     model = models.CharField(max_length=32)
     price = models.FloatField(null=True)
@@ -12,7 +33,6 @@ class Advertisement(models.Model):
     fuel_type = models.ForeignKey(FuelType, on_delete=models.CASCADE)
     engine = models.FloatField(null=True)
     mileage = models.FloatField(null=True)
-    # image = models.ImageField(default='fallback.png', upload_to='media/%Y/%m/%d', blank=True)
     description = models.TextField(max_length=3000)
     equipment = models.ManyToManyField('Equipment')
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
@@ -37,4 +57,3 @@ class CarImage(models.Model):
 
     def __str__(self) -> str:
         return f'{self.car.name} {self.car.model}'
-

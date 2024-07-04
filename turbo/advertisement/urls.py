@@ -9,7 +9,7 @@ urlpatterns = [
         name='cars'
     ),
     path(
-        'home/', 
+        '', 
         views.home, 
         name= 'home'
     ),
@@ -33,9 +33,31 @@ urlpatterns = [
         views.add_advertisement, 
         name='new_ad'
     ),
+    
     path(
         'delete_car/<int:id>/',
         views.delete_car,
         name='delete_car'
-    )
+    ),
+    path(
+        'login/', 
+        views.user_login,
+        name='login'
+    ),
+    path(
+        'accounts/login/',
+        views.user_login,
+        name='login'
+    ),
+    path(
+        'sigup/',
+        views.user_signup,
+        name='signup'
+    ),
+    path(
+        'logout/',
+        views.user_logout,
+        name='logout'
+    ),
+    
 ]
