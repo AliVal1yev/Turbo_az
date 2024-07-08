@@ -28,13 +28,14 @@ SECRET_KEY = 'django-insecure-&y9b0c7vy)*yo=szz#5^m3%9&=fdir47*ddy=*_7ros8#-(hog
 DEBUG = True
 
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_PORT = 587
-EMAIL_HOST_USER = '111111111111111'
-EMAIL_HOST_PASSWORD = '8888888888888'
+
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = '111111111111111'
+# EMAIL_HOST_PASSWORD = '8888888888888'
 
 
 ALLOWED_HOSTS = []
@@ -89,6 +90,7 @@ WSGI_APPLICATION = 'turbo.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
 DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.sqlite3',
@@ -97,16 +99,18 @@ DATABASES = {
  }
 
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'postgres',
-#        'USER': 'postgres',
-#        'PASSWORD':'Ali123',
-#        'HOST': 'localhost',
-#        'PORT': '5432',
-#    }
-# }
+
+'''DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'postgres',
+       'USER': 'postgres',
+       'PASSWORD':'Ali123',
+       'HOST': 'localhost',
+       'PORT': '5432',
+   }
+}'''
+
 
 
 # Password validation

@@ -2,18 +2,20 @@
 
 {% block content %}
 
+
+<h1>Filter Cars</h1>
+<form method="get">
+    {{ form.as_p }}
+    <button type="submit">Search</button>
+</form>
+{% if cars_with_images %}
 <div class="container">
     <div class="car-listings" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
         {% for item in cars_with_images %}
             <div class="car-listing" style="margin: 10px; padding: 10px; border: 1px solid #ccc; width: 300px;">
-                {%if item.car.vip_car %}
-                    <img src="{{ 'media/logo/viplogo.png' }}" alt="VIP" style="width:50px;height:50px;">
-                    {% if item.first_image %}
-                        <img src="{{ item.first_image.image.url }}" alt="{{ item.car.name }}" width="100%">
-                    {% else %}
-                        <p>No image available</p>
-                    {% endif %}
-                {% endif %} 
+                {% if item.first_image %}
+                    <img src="{{ item.first_image.image.url }}" alt="{{ item.car.name }}" width="100%">
+                {% endif %}
                 <h2>{{ item.car.price }} AZN</h2>
                 <h3>{{ item.car.name }} {{ item.car.model }}</h3>
                 <h4>{{ item.car.year }}, {{ item.car.engine }} L, {{ item.car.mileage }} km</h4>
@@ -23,5 +25,10 @@
         {% endfor %}
     </div>
 </div>
+{% else %}
+    <p>Car doesn't found.</p>
+{% endif %}
 
-{% endblock %}
+{%endblock%}
+
+

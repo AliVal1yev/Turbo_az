@@ -59,5 +59,20 @@ urlpatterns = [
         views.user_logout,
         name='logout'
     ),
+    path(
+        'mycars/', 
+        views.my_cars,
+        name='mycars'
+    ),
+    path(
+        'delete_message/<int:id>/', 
+        views.delete_car,
+        name='delete_message'
+    ),
+    path(
+        'filter/', 
+        views.filter,
+        name='filter'
+    ),
     
 ]
