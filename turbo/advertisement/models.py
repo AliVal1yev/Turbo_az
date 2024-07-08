@@ -22,6 +22,15 @@ class City(models.Model):
 
 
 class CarAdvertisement(models.Model):
+    PENDING = 'PENDING'
+    APPROVE = 'APPROVE'
+    REJECTED = 'REJECTED'
+    
+    CAR_STATUS = {
+        APPROVE: 'approve',
+        PENDING: 'pending',
+        REJECTED: 'rejected'
+    }
     user = models.ForeignKey(User, on_delete=models.CASCADE, null= True, blank= True)
     name = models.CharField(max_length=32)
     model = models.CharField(max_length=32)
@@ -40,6 +49,13 @@ class CarAdvertisement(models.Model):
     your_name = models.CharField(max_length=32)
     phone_number = models.IntegerField(null=True)
     your_email = models.EmailField(max_length=32)
+    car_status = models.CharField(
+        max_length=32,
+        default=PENDING,
+        choices=CAR_STATUS,
+        null=True,
+        blank=True
+        )
 
     def __str__(self) -> str:
         return f'{self.pk}. {self.name} {self.model}'

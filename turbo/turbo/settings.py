@@ -31,6 +31,7 @@ DEBUG = True
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'eliveliyev150@gmail.com'
 EMAIL_HOST_PASSWORD = 'pkgdajmctqdozhlk'
@@ -89,15 +90,15 @@ WSGI_APPLICATION = 'turbo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-'''DATABASES = {
+DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.sqlite3',
          'NAME': BASE_DIR / 'db.sqlite3',
      }
- }'''
+ }
 
 
-DATABASES = {
+'''DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
        'NAME': 'postgres',
@@ -106,7 +107,7 @@ DATABASES = {
        'HOST': 'localhost',
        'PORT': '5432',
    }
-}
+}'''
 
 
 # Password validation

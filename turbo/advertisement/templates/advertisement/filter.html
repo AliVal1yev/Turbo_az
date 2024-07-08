@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<h1>Filter Advertisements</h1>
+<form method="get">
+    {{ form.as_p }}
+    <button type="submit">Filter</button>
+</form>
+<h2>Advertisements</h2>
+{% if advertisements %}
+    <ul>
+        {% for ad in advertisements %}
+            <li>
+                {{ ad.name }} - {{ ad.model }} ({{ ad.category }}) 
+                <form action="{% url 'details' ad.pk %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Details</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No advertisements found.</p>
+{% endif %}
+
+{%endblock%}
+
+

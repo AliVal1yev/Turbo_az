@@ -1,5 +1,5 @@
 from django import forms
-from .models import CarAdvertisement, CarImage
+from .models import CarAdvertisement, CarImage, Category, FuelType
 from django.forms import modelformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -36,3 +36,20 @@ class AdvertisementImageForm(forms.ModelForm):
         fields = ['image']
 
 AdvertisementImageFormSet = modelformset_factory(CarImage, form=AdvertisementImageForm, extra=3)
+
+
+
+from django import forms
+
+class CarFilterForm(forms.Form):
+    name = forms.CharField(required=False, label='Car Name', max_length=255)
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        required=False,
+        empty_label='All Categories'
+    )
+    fuel_type = forms.ModelChoiceField(
+        queryset=FuelType.objects.all(),
+        required=False,
+        empty_label='All cars'
+    )

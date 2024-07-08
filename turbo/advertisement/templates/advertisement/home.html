@@ -3,23 +3,21 @@
 {% block content %}
 
 <div class="container">
-    <div class="car-listing">
-        <img src="https://via.placeholder.com/300x200" alt="Car 1">
-        <h2>Car Model 1</h2>
-        <p>Price: $20,000</p>
-        <button>View Details</button>
-    </div>
-    <div class="car-listing">
-        <img src="https://via.placeholder.com/300x200" alt="Car 2">
-        <h2>Car Model 2</h2>
-        <p>Price: $25,000</p>
-        <button>View Details</button>
-    </div>
-    <div class="car-listing">
-        <img src="https://via.placeholder.com/300x200" alt="Car 3">
-        <h2>Car Model 3</h2>
-        <p>Price: $30,000</p>
-        <button>View Details</button>
+    <div class="car-listings" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+        {% for item in cars_with_images %}
+            <div class="car-listing" style="margin: 10px; padding: 10px; border: 1px solid #ccc; width: 300px;">
+                {% if item.first_image %}
+                    <img src="{{ item.first_image.image.url }}" alt="{{ item.car.name }}" width="100%">
+                {% else %}
+                    <p>No image available</p>
+                {% endif %}
+                <h2>{{ item.car.price }} AZN</h2>
+                <h3>{{ item.car.name }} {{ item.car.model }}</h3>
+                <h4>{{ item.car.year }}, {{ item.car.engine }} L, {{ item.car.mileage }} km</h4>
+                <p>{{ item.car.created_at|date:"d-m-Y H:i" }}</p>
+                <a href="{% url 'details' item.car.id %}"><button>View Details</button></a>
+            </div>
+        {% endfor %}
     </div>
 </div>
 
