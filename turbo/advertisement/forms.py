@@ -51,5 +51,5 @@ class CarFilterForm(forms.Form):
     fuel_type = forms.ModelChoiceField(
         queryset=FuelType.objects.all(),
         required=False,
-        empty_label='All cars'
+        empty_label='All Fuel Type'
     )
