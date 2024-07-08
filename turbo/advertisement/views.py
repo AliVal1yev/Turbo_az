@@ -81,17 +81,11 @@ def delete_car(request, id):
 
 def car_details(request, id):
   ad_cars = get_object_or_404(CarAdvertisement, id=id)
-  # car_images = CarImage.objects.filter(car=ad_cars)
-  # first_image = car_images.first()
   context = {
       'ad_cars': ad_cars,
-      # 'car_images': car_images,
-      # 'first_image': first_image,
        }
 
   return render(request, 'advertisement/details.html', context )
-
-
 
 
 
@@ -99,7 +93,7 @@ def home(request):
     ad_cars = CarAdvertisement.objects.order_by('-created_at')
     cars_with_images = []
     for car in ad_cars:
-        if car.car_status == "APPROVE":
+        if car.car_status == "APPROVE" and car.vip_car:
             first_image = car.images.first()
             cars_with_images.append({
                 'car': car,
@@ -114,17 +108,32 @@ def home(request):
 def filter(request):
     form = CarFilterForm(request.GET)
     advertisements = CarAdvertisement.objects.order_by('-created_at')
+    cars_with_images = []
     if form.is_valid():
-        car_name = form.cleaned_data.get('name')
+        name = form.cleaned_data.get('car_brand')
+        model = form.cleaned_data.get('car_model')
         category = form.cleaned_data.get('category')
         fuel_type = form.cleaned_data.get('fuel_type')
-        if car_name:
-            advertisements = advertisements.filter(name=car_name)
-        elif category:
+        if name:
+            advertisements = advertisements.filter(name=name)
+        if model:
+            advertisements = advertisements.filter(model=model)
+        if category:
             advertisements = advertisements.filter(category=category)
-        elif fuel_type:
+        if fuel_type:
             advertisements = advertisements.filter(fuel_type=fuel_type)
-    return render(request, 'advertisement/filter.html', {'form': form, 'advertisements': advertisements})
+        for car in advertisements:
+            if car.car_status == "APPROVE":
+                first_image = car.images.first()
+                cars_with_images.append({
+                    'car': car,
+                    'first_image': first_image
+                })
+        context = {
+            'form': form,
+            'cars_with_images': cars_with_images
+        }
+    return render(request, 'advertisement/filter.html', context)
 
 
 

@@ -3,26 +3,30 @@
 {% block content %}
 
 
-<h1>Filter Advertisements</h1>
+<h1>Filter Cars</h1>
 <form method="get">
     {{ form.as_p }}
-    <button type="submit">Filter</button>
+    <button type="submit">Search</button>
 </form>
-<h2>Advertisements</h2>
-{% if advertisements %}
-    <ul>
-        {% for ad in advertisements %}
-            <li>
-                {{ ad.name }} - {{ ad.model }} ({{ ad.category }}) 
-                <form action="{% url 'details' ad.pk %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit">Details</button>
-                </form>
-            </li>
+{% if cars_with_images %}
+<div class="container">
+    <div class="car-listings" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+        {% for item in cars_with_images %}
+            <div class="car-listing" style="margin: 10px; padding: 10px; border: 1px solid #ccc; width: 300px;">
+                {% if item.first_image %}
+                    <img src="{{ item.first_image.image.url }}" alt="{{ item.car.name }}" width="100%">
+                {% endif %}
+                <h2>{{ item.car.price }} AZN</h2>
+                <h3>{{ item.car.name }} {{ item.car.model }}</h3>
+                <h4>{{ item.car.year }}, {{ item.car.engine }} L, {{ item.car.mileage }} km</h4>
+                <p>{{ item.car.created_at|date:"d-m-Y H:i" }}</p>
+                <a href="{% url 'details' item.car.id %}"><button>View Details</button></a>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
+</div>
 {% else %}
-    <p>No advertisements found.</p>
+    <p>Car doesn't found.</p>
 {% endif %}
 
 {%endblock%}
