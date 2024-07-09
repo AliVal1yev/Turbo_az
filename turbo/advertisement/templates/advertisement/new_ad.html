@@ -1,28 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-
-    <h1>Add New Car</h1>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10 mx-auto">
-                <h3>Add New Car</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <h3>Add New Car</h3>
+            <hr>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p}}
+                {{ formset.management_form }}
+                {% for image_form in formset %}
+                    <div class="form-group">
+                        {{ image_form.image.label_tag }} {{ image_form.image }}
+                    </div>
+                {% endfor %}
+                <button class="btn btn-info">Submit</button>
                 <hr>
-                <form action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    {{ formset.management_form }}
-                    {% for image_form in formset %}
-                        <div class="form-group">
-                            {{ image_form.image.label_tag }} {{ image_form.image }}
-                        </div>
-                    {% endfor %}
-                    <button class="btn btn-info">Submit</button>
-                    <hr>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
+</div>
     
 {% endblock %}

@@ -1,9 +1,12 @@
 {% extends "base.html" %}
-
+{%load static%}
 {% block content %}
-
+{%if ad_cars.vip_car %}
+    <img src="{% static 'logo2/viplogo.png' %}" alt="VIP" style="width:50px;height:50px;">
+{%else%}
+    <a href= ''> Make a VIP</a>
+{%endif%}
 <div class="col-md-4">
-    <h3>Images</h3>
     {% for image in ad_cars.images.all %}
         <img src="{{ image.image.url }}" alt="Car Image" width="300" height="200">
     {% endfor %}
@@ -28,7 +31,7 @@
 <h1>Contact info</h1>
 <h2>Name: {{ ad_cars.your_name }}</h2>
 <h2>Phone Number: {{ ad_cars.phone_number }}</h2>
-<h2>Email adress: {{ ad_cars.your_email }}</h2>
+{% comment %} <h2>Email adress: {{ ad_cars.your_email }}</h2> {% endcomment %}
 
 
 <a href="{% url 'delete_car' ad_cars.id %}"><button>Delete</button></a>
