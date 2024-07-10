@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import CarAdvertisement, CarImage, Category
+from .models import CarAdvertisement, CarImage
 from .forms import AdvertisementForm, AdvertisementImageFormSet, SignupForm, LoginForm, CarFilterForm
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
-
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 def user_signup(request):
     if request.method == 'POST':
@@ -213,3 +212,60 @@ def my_cars(request):
     }
     return render(request, 'advertisement/my_advertisement.html', context)
     
+
+
+@csrf_exempt
+def toggle_favorite(request, ad_id):
+    ad = get_object_or_404(CarAdvertisement, id=ad_id)
+    if request.user in ad.favorites.all():
+        ad.favorites.remove(request.user)
+        status = 'removed'
+    else:
+        ad.favorites.add(request.user)
+        status = 'added'
+    return JsonResponse({'status': status, 'ad_id': ad_id})
+
+@login_required
+def favorite_cars(request):
+    cars_with_images = []
+    cars = CarAdvertisement.objects.filter(favorites=request.user).order_by('-created_at')
+    for car in cars:
+        if car.car_status == car.APPROVE:
+            first_image = car.images.first()
+            cars_with_images.append({
+                'car': car,
+                'first_image': first_image
+            })
+    context = {
+        'cars_with_images': cars_with_images
+    }
+    return render(request, 'advertisement/favorites.html', context)
+
+
+@login_required
+def edit_car(request, pk):
+    advertisement = get_object_or_404(CarAdvertisement, pk=pk)
+    if request.user != advertisement.user:
+        return redirect('cars') 
+    if request.method == 'POST':
+        form = AdvertisementForm(request.POST, request.FILES, instance=advertisement)
+        formset = AdvertisementImageFormSet(request.POST, request.FILES, queryset=CarImage.objects.filter(car=advertisement))
+        if form.is_valid() and formset.is_valid():
+            advertisement = form.save(commit=False)
+            advertisement.user = request.user
+            advertisement.save()
+            CarImage.objects.filter(car=advertisement).delete()
+            for form in formset.cleaned_data:
+                if form:
+                    image = form['image']
+                    CarImage.objects.create(car=advertisement, image=image)
+            return redirect('cars')
+    else:
+        form = AdvertisementForm(instance=advertisement)
+        formset = AdvertisementImageFormSet(queryset=CarImage.objects.filter(car=advertisement))
+
+    context = {
+        'form': form,
+        'formset': formset,
+    }
+    return render(request, 'advertisement/edit.html', context)

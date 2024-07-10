@@ -72,7 +72,7 @@ class CarAdvertisement(models.Model):
         blank=True
         )
     vip_car = models.BooleanField(default=False)
-    favorites = models.ManyToManyField(User, related_name='favorites_ads', null=True, blank=True)
+    favorites = models.ManyToManyField(User, related_name='favorites_ads',blank=True)
 
     def __str__(self) -> str:
         return f'{self.pk}. {self.name} {self.model}'
