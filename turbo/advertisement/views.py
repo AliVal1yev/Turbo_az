@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import CarAdvertisement, CarImage
 from .forms import AdvertisementForm, AdvertisementImageFormSet, SignupForm, LoginForm, CarFilterForm
-from django.conf import settings
 from django.contrib import messages
-from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task
 
 def user_signup(request):
     if request.method == 'POST':
@@ -66,6 +65,8 @@ def delete_car(request, id):
         if ad.user == request.user:
             ad.car_status = ad.REJECTED
             ad.save()
+            send_deleted_mail_task(ad.id)
+            
         else:
             return render(request, 'advertisement/delete_message.html')
         messages.success(request, 'Advertisement deleted successfully.')
@@ -136,12 +137,8 @@ def filter(request):
 
 
 
-
 def about(request):
   return render(request, 'advertisement/about.html')
-
-def contact(request):
-  return render(request, 'advertisement/contact.html')
 
 
 @login_required
@@ -153,21 +150,13 @@ def add_advertisement(request):
         if form.is_valid() and formset.is_valid():
             advertisement = form.save(commit=False)
             advertisement.user = request.user 
-            mail = form.cleaned_data.get('your_email')
-            name = form.cleaned_data.get('your_name')
-            car_name = form.cleaned_data.get('name')
-            car_model = form.cleaned_data.get('model')
             advertisement.save()
+            send_confirmation_mail_task.delay(advertisement.id)
             for form in formset.cleaned_data:
                 if form:
                     image = form['image']
                     CarImage.objects.create(car=advertisement, image=image)
-            # if mail:
-            #     success, message = mail_message(mail, name, car_name, car_model)
-            #     if success:
-            #         messages.success(request, message)
-            #     else:
-            #         messages.error(request, message)
+                    
             return redirect('cars') 
     else:
         form = AdvertisementForm()
@@ -178,21 +167,6 @@ def add_advertisement(request):
         'formset': formset,
     }
     return render(request, 'advertisement/new_ad.html', context)
-
-
-def mail_message(email, name, car_name, car_model):
-    
-  subject = 'Confirmation'
-  message = f'Hi {name}. Your {car_name} {car_model} advertisement was added successfully'
-  send_mail(
-      subject,
-      message,
-    #   settings.EMAIL_HOST_USER,
-      [email],
-      fail_silently=False
-  )
-  return True, 'Email sent successfully!'
-
 
 
 @login_required
@@ -254,6 +228,7 @@ def edit_car(request, pk):
             advertisement = form.save(commit=False)
             advertisement.user = request.user
             advertisement.save()
+            send_update_notification_task(advertisement.id)
             CarImage.objects.filter(car=advertisement).delete()
             for form in formset.cleaned_data:
                 if form:
