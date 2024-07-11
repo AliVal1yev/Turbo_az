@@ -34,8 +34,8 @@ DEBUG = True
 # EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = False
 # EMAIL_PORT = 587
-# EMAIL_HOST_USER = '111111111111111'
-# EMAIL_HOST_PASSWORD = '8888888888888'
+# EMAIL_HOST_USER = 'eliveliyev150@gmail.com'
+# EMAIL_HOST_PASSWORD = 'kndabnlnsxtjemzg'
 
 
 ALLOWED_HOSTS = []
@@ -162,3 +162,23 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+# INSTALLED_APPS += [
+#     'django_celery_beat',
+#     'django_celery_results',
+# ]
+
+CELERY_BEAT_SCHEDULE = {
+    'add-every-30-seconds': {
+        'task': 'advertisement.tasks.add',
+        'schedule': 30.0,
+        'args': (16, 16)
+    },
+}

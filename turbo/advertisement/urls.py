@@ -19,11 +19,6 @@ urlpatterns = [
         name='about'
     ),
     path(
-        'contact/', 
-        views.contact, 
-        name='contact'
-    ),
-    path(
         'car/<int:id>/', 
         views.car_details, 
         name='details'
@@ -74,5 +69,19 @@ urlpatterns = [
         views.filter,
         name='filter'
     ),
-    
+    path(
+        'toggle-favorite/<int:ad_id>/',
+        views.toggle_favorite,
+        name='toggle_favorite'
+        ),
+    path(
+        'favorites/',
+        views.favorite_cars,
+        name='favorite_cars'
+    ),
+    path(
+        'edit_car/<int:pk>/',
+        views.edit_car,
+        name='edit_car'
+    )
 ]

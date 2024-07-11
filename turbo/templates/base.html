@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Turbo.az</title>
 </head>
 <body>
@@ -41,7 +42,8 @@
     <a href="{% url 'cars' %}">All Cars</a>
     <a href="{% url 'mycars' %}">My Cars</a>
     <a href="{% url 'filter' %}">Filter</a>
-    <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'favorite_cars'%}"> My Favorites</a>
+    <a href="{% url 'about' %}">About Us</a>
 </nav>
   {% block content %} {% endblock %}
 
