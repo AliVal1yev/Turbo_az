@@ -170,10 +170,10 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
-# INSTALLED_APPS += [
-#     'django_celery_beat',
-#     'django_celery_results',
-# ]
+INSTALLED_APPS += [
+    'django_celery_beat',
+    'django_celery_results',
+]
 
 CELERY_BEAT_SCHEDULE = {
     'add-every-30-seconds': {

@@ -20,7 +20,6 @@ def send_advertisement_mail(ad_id, subject_suffix, message_suffix):
     return True, 'Email sent successfully!'
 
 
-
 @shared_task
 def send_confirmation_mail_task(ad_id):
     return send_advertisement_mail(ad_id, 'Added', 'added')
