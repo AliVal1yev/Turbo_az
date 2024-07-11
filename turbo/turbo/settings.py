@@ -170,15 +170,14 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
-INSTALLED_APPS += [
-    'django_celery_beat',
-    'django_celery_results',
-]
+# INSTALLED_APPS += [
+#     'django_celery_beat',
+#     'django_celery_results',
+# ]
 
-# Optional: Configure periodic tasks
 CELERY_BEAT_SCHEDULE = {
     'add-every-30-seconds': {
-        'task': 'your_app.tasks.add',
+        'task': 'advertisement.tasks.add',
         'schedule': 30.0,
         'args': (16, 16)
     },

@@ -19,11 +19,6 @@ urlpatterns = [
         name='about'
     ),
     path(
-        'contact/', 
-        views.contact, 
-        name='contact'
-    ),
-    path(
         'car/<int:id>/', 
         views.car_details, 
         name='details'
