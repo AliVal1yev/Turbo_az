@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import CarAdvertisement, CarImage
+from .models import CarAdvertisement, CarImage, CarName, CarModel, Category, FuelType
 from .forms import AdvertisementForm, AdvertisementImageFormSet, SignupForm, LoginForm, CarFilterForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task
+# from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task
+from rest_framework import viewsets
+from .serializers import CarSerializer, CarNameSerializer, CarModelSerializer, CategorySerializer, FuelTypeSerializer
 
 def user_signup(request):
     if request.method == 'POST':
@@ -65,7 +67,7 @@ def delete_car(request, id):
         if ad.user == request.user:
             ad.car_status = ad.REJECTED
             ad.save()
-            send_deleted_mail_task(ad.id)
+            # send_deleted_mail_task(ad.id)
             
         else:
             return render(request, 'advertisement/delete_message.html')
@@ -105,7 +107,7 @@ def home(request):
     return render(request, 'advertisement/home.html', context)
 
 
-def filter(request):
+def filter_view(request):
     form = CarFilterForm(request.GET)
     advertisements = CarAdvertisement.objects.order_by('-created_at')
     cars_with_images = []
@@ -151,7 +153,7 @@ def add_advertisement(request):
             advertisement = form.save(commit=False)
             advertisement.user = request.user 
             advertisement.save()
-            send_confirmation_mail_task.delay(advertisement.id)
+            # send_confirmation_mail_task.delay(advertisement.id)
             for form in formset.cleaned_data:
                 if form:
                     image = form['image']
@@ -228,7 +230,7 @@ def edit_car(request, pk):
             advertisement = form.save(commit=False)
             advertisement.user = request.user
             advertisement.save()
-            send_update_notification_task(advertisement.id)
+            # send_update_notification_task(advertisement.id)
             CarImage.objects.filter(car=advertisement).delete()
             for form in formset.cleaned_data:
                 if form:
@@ -244,3 +246,25 @@ def edit_car(request, pk):
         'formset': formset,
     }
     return render(request, 'advertisement/edit.html', context)
+
+
+class CarAdvertisementViewSet(viewsets.ModelViewSet):
+    queryset = CarAdvertisement.objects.all()
+    serializer_class = CarSerializer
+
+class CarNameViewSet(viewsets.ModelViewSet):
+    queryset = CarName.objects.all()
+    serializer_class = CarNameSerializer
+
+class CarModelViewSet(viewsets.ModelViewSet):
+    queryset = CarModel.objects.all()
+    serializer_class = CarModelSerializer
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class FuelTypeViewSet(viewsets.ModelViewSet):
+    queryset = FuelType.objects.all()
+    serializer_class = FuelTypeSerializer
+

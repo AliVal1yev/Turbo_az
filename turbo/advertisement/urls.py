@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 
+
 urlpatterns = [
     path(
         'cars/', 
@@ -66,7 +67,7 @@ urlpatterns = [
     ),
     path(
         'filter/', 
-        views.filter,
+        views.filter_view,
         name='filter'
     ),
     path(
@@ -85,3 +86,4 @@ urlpatterns = [
         name='edit_car'
     )
 ]
+
