@@ -90,3 +90,5 @@ class CarImage(models.Model):
 
     def __str__(self) -> str:
         return f'{self.car.name} {self.car.model}'
+    
+    
