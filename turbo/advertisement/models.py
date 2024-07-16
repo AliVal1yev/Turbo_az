@@ -86,7 +86,7 @@ class Equipment(models.Model):
     
 class CarImage(models.Model):
     car = models.ForeignKey(CarAdvertisement, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='media/%Y/%m/%d', blank=True)
+    image = models.ImageField(upload_to='media/%Y/%m/%d', blank=True, null=True)
 
     def __str__(self) -> str:
         return f'{self.car.name} {self.car.model}'

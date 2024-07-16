@@ -159,7 +159,7 @@ def add_advertisement(request):
                     image = form['image']
                     CarImage.objects.create(car=advertisement, image=image)
                     
-            return redirect('cars') 
+            return redirect('details', advertisement.id) 
     else:
         form = AdvertisementForm()
         formset = AdvertisementImageFormSet(queryset=CarImage.objects.none())
@@ -177,12 +177,11 @@ def my_cars(request):
     cars_with_images = []
 
     for car in cars:
-        if car.car_status == car.APPROVE:
-            first_image = car.images.first()
-            cars_with_images.append({
-                'car': car,
-                'first_image': first_image
-            })
+        first_image = car.images.first()
+        cars_with_images.append({
+            'car': car,
+            'first_image': first_image
+        })
     context = {
         'cars_with_images': cars_with_images
     }
@@ -219,50 +218,55 @@ def favorite_cars(request):
 
 
 @login_required
-def edit_car(request, pk):
-    advertisement = get_object_or_404(CarAdvertisement, pk=pk)
-    if request.user != advertisement.user:
-        return redirect('cars') 
+def edit_car(request, ad_id):
+    advertisement = get_object_or_404(CarAdvertisement, id=ad_id, user=request.user)
+
     if request.method == 'POST':
         form = AdvertisementForm(request.POST, request.FILES, instance=advertisement)
-        formset = AdvertisementImageFormSet(request.POST, request.FILES, queryset=CarImage.objects.filter(car=advertisement))
+        formset = AdvertisementImageFormSet(request.POST, request.FILES, instance=advertisement)
+
         if form.is_valid() and formset.is_valid():
-            advertisement = form.save(commit=False)
-            advertisement.user = request.user
-            advertisement.save()
-            # send_update_notification_task(advertisement.id)
-            CarImage.objects.filter(car=advertisement).delete()
-            for form in formset.cleaned_data:
-                if form:
-                    image = form['image']
-                    CarImage.objects.create(car=advertisement, image=image)
-            return redirect('cars')
+            if advertisement.car_status != advertisement.REJECTED:
+                advertisement = form.save(commit=False)
+                advertisement.user = request.user
+                advertisement.car_status = advertisement.PENDING
+                advertisement.save()
+                #send_update_notification_task
+                formset.save() 
+                return redirect('details', ad_id)
+            return redirect('details', ad_id)
     else:
         form = AdvertisementForm(instance=advertisement)
-        formset = AdvertisementImageFormSet(queryset=CarImage.objects.filter(car=advertisement))
+        formset = AdvertisementImageFormSet(instance=advertisement)
 
     context = {
         'form': form,
         'formset': formset,
+        'advertisement': advertisement,
     }
     return render(request, 'advertisement/edit.html', context)
+
 
 
 class CarAdvertisementViewSet(viewsets.ModelViewSet):
     queryset = CarAdvertisement.objects.all()
     serializer_class = CarSerializer
 
+
 class CarNameViewSet(viewsets.ModelViewSet):
     queryset = CarName.objects.all()
     serializer_class = CarNameSerializer
+
 
 class CarModelViewSet(viewsets.ModelViewSet):
     queryset = CarModel.objects.all()
     serializer_class = CarModelSerializer
 
+
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
 
 class FuelTypeViewSet(viewsets.ModelViewSet):
     queryset = FuelType.objects.all()
