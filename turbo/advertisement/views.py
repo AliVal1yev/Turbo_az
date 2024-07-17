@@ -83,6 +83,8 @@ def delete_car(request, id):
 
 def car_details(request, id):
   ad_cars = get_object_or_404(CarAdvertisement, id=id)
+  ad_cars.watch_count += 1
+  ad_cars.save(update_fields=['watch_count'])
   context = {
       'ad_cars': ad_cars,
        }

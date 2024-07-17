@@ -33,6 +33,7 @@
                 <h3>{{ item.car.name }} {{ item.car.model }}</h3>
                 <h4>{{ item.car.year }}, {{ item.car.engine }} L, {{ item.car.mileage }} km</h4>
                 <p>{{ item.car.created_at|date:"d-m-Y H:i" }}</p>
+                <p>{{ item.car.watch_count }} views</p>
                 <a href="{% url 'details' item.car.id %}"><button>View Details</button></a>
             </div>
         {% endfor %}
