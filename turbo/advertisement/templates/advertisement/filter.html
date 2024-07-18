@@ -5,7 +5,10 @@
 <form method="get">
     {{ form.as_p }}
     <button type="submit">Search</button>
+    <button type="reset" onclick="window.location.href='{% url 'filter' %}'">Reset</button>
 </form>
+ 
+
 
 <div class="container">
     <div class="car-listings" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
@@ -15,7 +18,7 @@
                     <img
                         class="favorite-btn"
                         data-ad-id="{{ item.car.id }}"
-                        src="{% if request.user in item.car.favorites.all %}{% static 'images/favorite_logo.png' %}{% else %}{% static 'images/non_favorite_logo.png' %}{% endif %}"
+                        src="{% if request.user in item.car.favorites.all %}{% static 'images/favorite_logo2.png' %}{% else %}{% static 'images/non_favorite_logo2.png' %}{% endif %}"
                         alt="Favorite"
                         style="width:30px;height:30px; position: absolute; top: 10px; right: 10px; cursor: pointer;"
                     >
@@ -36,6 +39,7 @@
                 <h3>{{ item.car.name }} {{ item.car.model }}</h3>
                 <h4>{{ item.car.year }}, {{ item.car.engine }} L, {{ item.car.mileage }} km</h4>
                 <p>{{ item.car.created_at|date:"d-m-Y H:i" }}</p>
+                <p>{{ item.car.watch_count }} views</p>
                 <a href="{% url 'details' item.car.id %}"><button>View Details</button></a>
             </div>
         {% endfor %}
@@ -57,9 +61,9 @@
                 },
                 success: function(response){
                     if(response.status == 'added'){
-                        $btn.attr('src', '{% static "images/favorite_logo.png" %}');
+                        $btn.attr('src', '{% static "images/favorite_logo2.png" %}');
                     } else {
-                        $btn.attr('src', '{% static "images/non_favorite_logo.png" %}');
+                        $btn.attr('src', '{% static "images/non_favorite_logo2.png" %}');
                     }
                 }
             });

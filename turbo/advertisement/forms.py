@@ -36,8 +36,13 @@ class AdvertisementImageForm(forms.ModelForm):
         fields = ['image']
 
 
-AdvertisementImageFormSet = modelformset_factory(CarImage, form=AdvertisementImageForm, extra=3)
-
+AdvertisementImageFormSet = forms.inlineformset_factory(
+    CarAdvertisement,
+    CarImage,
+    form=AdvertisementImageForm,
+    extra=2,
+    can_delete=True,
+)
 
 class CarFilterForm(forms.Form):
     car_brand = forms.ModelChoiceField(

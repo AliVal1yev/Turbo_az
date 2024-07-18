@@ -1,12 +1,12 @@
-.container {
-    background-color: antiquewhite;
+/* .container {
+    background-color: rgb(230, 224, 217);
     max-width: 800px;
     margin: auto;
     padding: 30px;
     border: 1px solid #ccc;
     border-radius: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+} */
 .form-group {
     margin-bottom: 15px;
 }

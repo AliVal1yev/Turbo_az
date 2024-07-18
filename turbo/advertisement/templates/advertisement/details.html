@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {%load static%}
 {% block content %}
+
+
+{% if ad_cars.car_status == 'PENDING' %}
+    <h2> Your car is pending now, please wait...</h2>
+{% elif ad_cars.car_status == 'REJECTED' %}
+    <h2> Your car is rejected please try again...!</h2> 
+{% endif %}
+
 {%if ad_cars.vip_car %}
     <img src="{% static 'logo2/viplogo.png' %}" alt="VIP" style="width:50px;height:50px;">
 {%else%}
@@ -31,7 +39,6 @@
 <h1>Contact info</h1>
 <h2>Name: {{ ad_cars.your_name }}</h2>
 <h2>Phone Number: {{ ad_cars.phone_number }}</h2>
-{% comment %} <h2>Email adress: {{ ad_cars.your_email }}</h2> {% endcomment %}
 
 {%if request.user == ad_cars.user%}
     <a href="{% url 'delete_car' ad_cars.id %}"><button>Delete</button></a>
