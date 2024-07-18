@@ -157,7 +157,7 @@ def add_advertisement(request):
                     image = form['image']
                     CarImage.objects.create(car=advertisement, image=image)
                     
-            return redirect('cars') 
+            return redirect(' ') 
     else:
         form = AdvertisementForm()
         formset = AdvertisementImageFormSet(queryset=CarImage.objects.none())
