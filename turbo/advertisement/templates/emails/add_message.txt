@@ -1,0 +1,9 @@
+Hi {{ ad.your_name }},
+
+Your advertisement for {{ ad.name }} {{ ad.model }} was {{ message_ }} successfully.
+
+To view the details of this car, click the link below:
+{{ ad_url }}
+
+Best regards,
+Fake Turbo.az Team

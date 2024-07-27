@@ -29,13 +29,13 @@ DEBUG = True
 
 
 
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_USE_TLS = True
-# EMAIL_USE_SSL = False
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'eliveliyev150@gmail.com'
-# EMAIL_HOST_PASSWORD = 'kndabnlnsxtjemzg'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'eliveliyev150@gmail.com'
+EMAIL_HOST_PASSWORD = 'kndabnlnsxtjemzg'
 
 
 ALLOWED_HOSTS = []
@@ -164,27 +164,29 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
-# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
-# CELERY_ACCEPT_CONTENT = ['advertisement/json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'UTC'
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_ACCEPT_CONTENT = ['advertisement/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
 
-# INSTALLED_APPS += [
-#     # 'django_celery_beat',
-#     'django_celery_results',
-# ]
+INSTALLED_APPS += [
+    'django_celery_beat',
+    'django_celery_results',
+]
 
-# CELERY_BEAT_SCHEDULE = {
-#     'add-every-30-seconds': {
-#         'task': 'advertisement.tasks.add',
-#         'schedule': 30.0,
-#         'args': (16, 16)
-#     },
-# }
+CELERY_BEAT_SCHEDULE = {
+    'add-every-30-seconds': {
+        'task': 'advertisement.tasks.add',
+        'schedule': 30.0,
+        'args': (16, 16)
+    },
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
+
+SITE_URL = 'http://127.0.0.1:8000'

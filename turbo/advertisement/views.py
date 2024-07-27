@@ -6,8 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-# from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task
-from rest_framework import viewsets
+from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task
+from rest_framework import viewsets # type: ignore
 from .serializers import CarSerializer, CarNameSerializer, CarModelSerializer, CategorySerializer, FuelTypeSerializer
 
 def user_signup(request):
@@ -67,7 +67,7 @@ def delete_car(request, id):
         if ad.user == request.user:
             ad.car_status = ad.REJECTED
             ad.save()
-            # send_deleted_mail_task(ad.id)
+            send_deleted_mail_task(ad.id)
             
         else:
             return render(request, 'advertisement/delete_message.html')
@@ -155,7 +155,7 @@ def add_advertisement(request):
             advertisement = form.save(commit=False)
             advertisement.user = request.user 
             advertisement.save()
-            # send_confirmation_mail_task.delay(advertisement.id)
+            send_confirmation_mail_task.delay(advertisement.id)
             for form in formset.cleaned_data:
                 if form:
                     image = form['image']
@@ -233,7 +233,7 @@ def edit_car(request, ad_id):
                 advertisement.user = request.user
                 advertisement.car_status = advertisement.PENDING
                 advertisement.save()
-                #send_update_notification_task
+                send_update_notification_task(advertisement.id)
                 formset.save() 
                 return redirect('details', ad_id)
             return redirect('details', ad_id)
