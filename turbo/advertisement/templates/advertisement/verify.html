@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <title>Verify Code</title>
+</head>
+<body>
+    <h2>Enter Verification Code in your email message</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Verify</button>
+    </form>
+</body>
+{% endblock %}

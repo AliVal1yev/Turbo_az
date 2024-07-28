@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import CarAdvertisement, CarImage, CarName, CarModel, Category, FuelType
-from .forms import AdvertisementForm, AdvertisementImageFormSet, SignupForm, LoginForm, CarFilterForm
+from .models import CarAdvertisement, CarImage, CarName, CarModel, Category, FuelType, User
+from .forms import AdvertisementForm, AdvertisementImageFormSet, SignupForm, LoginForm, CarFilterForm, VerificationForm
 from django.contrib import messages
+import random
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task
+from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task, send_verify_code_mail_task
 from rest_framework import viewsets # type: ignore
 from .serializers import CarSerializer, CarNameSerializer, CarModelSerializer, CategorySerializer, FuelTypeSerializer
 
@@ -30,12 +31,33 @@ def user_login(request):
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             if user:
-                login(request, user)    
-                return redirect('home')
+                login(request, user) 
+                verification_code = random.randint(100000, 999999)
+                send_verify_code_mail_task(user, verification_code)
+                request.session['verification_code'] = verification_code
+                request.session['username'] = username
+                request.session.save()
+                return redirect('verify')
     else:
         form = LoginForm()
     return render(request, 'advertisement/login.html', {'form': form})
 
+
+def verify_view(request):
+    if request.method == 'POST':
+        form = VerificationForm(request.POST)
+        if form.is_valid():
+            verification_code = form.cleaned_data['verification_code']
+            if verification_code == str(request.session.get('verification_code')):
+                username = request.session.get('username')
+                user = User.objects.get(username=username)
+                login(request, user)
+                return redirect('home')
+            else:
+                form.add_error(None, 'Invalid verification code')
+    else:
+        form = VerificationForm()
+    return render(request, 'advertisement/verify.html', {'form': form})
 
 
 def user_logout(request):
@@ -233,7 +255,7 @@ def edit_car(request, ad_id):
                 advertisement.user = request.user
                 advertisement.car_status = advertisement.PENDING
                 advertisement.save()
-                send_update_notification_task(advertisement.id)
+                send_update_notification_task.delay(advertisement.id)
                 formset.save() 
                 return redirect('details', ad_id)
             return redirect('details', ad_id)

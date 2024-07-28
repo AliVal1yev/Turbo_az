@@ -84,6 +84,11 @@ urlpatterns = [
         'edit_car/<int:ad_id>/',
         views.edit_car,
         name='edit_car'
-    )
+    ),
+    path(
+        'verify/',
+        views.verify_view,
+        name='verify'
+    ),
 ]
 

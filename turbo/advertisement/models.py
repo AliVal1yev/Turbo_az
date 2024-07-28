@@ -24,6 +24,7 @@ class CarModel(models.Model):
         return f'{self.name}'
 
 
+
 class FuelType(models.Model):
     name =models.CharField(max_length=32)
 

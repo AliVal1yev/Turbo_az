@@ -1,9 +1,10 @@
 from celery import shared_task
-from .models import CarAdvertisement
+from .models import CarAdvertisement, User
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.urls import reverse
+import random
 
 
 def send_advertisement_mail(ad_id, subject_, message_):
@@ -28,6 +29,19 @@ def send_advertisement_mail(ad_id, subject_, message_):
     msg.send()
 
     return True, 'Email sent successfully!'
+
+
+
+@shared_task
+def send_verify_code_mail_task(user, verification_code):
+
+    send_mail(
+            'Your Verification Code',
+            f'Your verification code is {verification_code}',
+            'settings.EMAIL_HOST_USER',
+            [user.email],
+            fail_silently=False,
+        )
 
 @shared_task
 def send_confirmation_mail_task(ad_id):
