@@ -38,7 +38,7 @@ EMAIL_HOST_USER = 'eliveliyev150@gmail.com'
 EMAIL_HOST_PASSWORD = 'kndabnlnsxtjemzg'
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 
