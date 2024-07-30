@@ -255,7 +255,7 @@ def edit_car(request, ad_id):
                 advertisement.user = request.user
                 advertisement.car_status = advertisement.PENDING
                 advertisement.save()
-                send_update_notification_task.delay(advertisement.id)
+                send_update_notification_task(advertisement.id)
                 formset.save() 
                 return redirect('details', ad_id)
             return redirect('details', ad_id)
