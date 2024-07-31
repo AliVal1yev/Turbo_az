@@ -33,7 +33,7 @@ def user_login(request):
             if user:
                 login(request, user) 
                 verification_code = random.randint(100000, 999999)
-                send_verify_code_mail_task.delay(user, verification_code)
+                send_verify_code_mail_task(user, verification_code)
                 request.session['verification_code'] = verification_code
                 request.session['username'] = username
                 request.session.save()
