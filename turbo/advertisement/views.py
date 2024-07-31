@@ -21,7 +21,7 @@ def user_signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(request)
             if user:
                 login(request, user)
                 send_verify_code_mail_task(user, verification_code)
