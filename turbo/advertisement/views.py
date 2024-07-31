@@ -21,14 +21,7 @@ def user_signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
-            user = authenticate(request)
-            if user:
-                login(request, user)
-                send_verify_code_mail_task(user, verification_code)
-                request.session['verification_code'] = verification_code
-                request.session['username'] = username
-                request.session.save()
-                return redirect('verify')
+            return redirect('login')
     else:
         form = SignupForm()
     return render(request, 'advertisement/signup.html', {'form': form})
