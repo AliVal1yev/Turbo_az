@@ -11,7 +11,7 @@ from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_upd
 from rest_framework import viewsets # type: ignore
 from .serializers import CarSerializer, CarNameSerializer, CarModelSerializer, CategorySerializer, FuelTypeSerializer
 
-def user_signup(request):
+def user_signup(request): 
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -33,7 +33,7 @@ def user_login(request):
             if user:
                 login(request, user) 
                 verification_code = random.randint(100000, 999999)
-                send_verify_code_mail_task(user, verification_code)
+                send_verify_code_mail_task.delay(user, verification_code)
                 request.session['verification_code'] = verification_code
                 request.session['username'] = username
                 request.session.save()
