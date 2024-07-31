@@ -11,12 +11,21 @@ from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_upd
 from rest_framework import viewsets # type: ignore
 from .serializers import CarSerializer, CarNameSerializer, CarModelSerializer, CategorySerializer, FuelTypeSerializer
 
+
+
+verification_code = random.randint(100000, 999999)
+
+
 def user_signup(request): 
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            send_verify_code_mail_task(user, verification_code)
+            request.session['verification_code'] = verification_code
+            request.session['username'] = username
+            request.session.save()
+            return redirect('verify')
     else:
         form = SignupForm()
     return render(request, 'advertisement/signup.html', {'form': form})
@@ -32,7 +41,6 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user) 
-                verification_code = random.randint(100000, 999999)
                 send_verify_code_mail_task(user, verification_code)
                 request.session['verification_code'] = verification_code
                 request.session['username'] = username
@@ -177,7 +185,7 @@ def add_advertisement(request):
             advertisement = form.save(commit=False)
             advertisement.user = request.user 
             advertisement.save()
-            send_confirmation_mail_task.delay(advertisement.id)
+            send_confirmation_mail_task(advertisement.id)
             for form in formset.cleaned_data:
                 if form:
                     image = form['image']
@@ -255,7 +263,7 @@ def edit_car(request, ad_id):
                 advertisement.user = request.user
                 advertisement.car_status = advertisement.PENDING
                 advertisement.save()
-                send_update_notification_task.delay(advertisement.id)
+                send_update_notification_task(advertisement.id)
                 formset.save() 
                 return redirect('details', ad_id)
             return redirect('details', ad_id)
