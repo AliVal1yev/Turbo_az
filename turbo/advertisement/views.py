@@ -7,8 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task, send_verify_code_mail_task
-from rest_framework import viewsets # type: ignore
+from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task, send_verify_code_mail_task, test_task
+from rest_framework import viewsets 
 from .serializers import CarSerializer, CarNameSerializer, CarModelSerializer, CategorySerializer, FuelTypeSerializer
 
 def user_signup(request):
@@ -30,10 +30,11 @@ def user_login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
+            user_email = user.email
             if user:
                 login(request, user) 
                 verification_code = random.randint(100000, 999999)
-                send_verify_code_mail_task(user, verification_code)
+                send_verify_code_mail_task.delay(user_email, verification_code)
                 request.session['verification_code'] = verification_code
                 request.session['username'] = username
                 request.session.save()
@@ -78,6 +79,7 @@ def cars(request):
     context = {
         'cars_with_images': cars_with_images
     }
+    
     return render(request, 'advertisement/cars.html', context)
 
 
@@ -118,6 +120,7 @@ def car_details(request, id):
 def home(request):
     ad_cars = CarAdvertisement.objects.order_by('-created_at')
     cars_with_images = []
+    #test_task.delay()
     for car in ad_cars:
         if car.car_status == "APPROVE" and car.vip_car:
             first_image = car.images.first()
