@@ -12,6 +12,8 @@ services:
     depends_on:
       - redis
       - celery_worker
+    networks:
+      - app-network
 
   redis:
     image: redis:latest
