@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import viewset
 
 
 
@@ -89,6 +90,11 @@ urlpatterns = [
         'verify/',
         views.verify_view,
         name='verify'
+    ),
+    path(
+        'carapi/',
+         views.carmodel_view_api,
+         name='carapi'
     ),
 ]
 

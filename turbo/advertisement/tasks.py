@@ -1,17 +1,11 @@
 from celery import shared_task
-from .models import CarAdvertisement, User
+from .models import CarAdvertisement
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.urls import reverse
-import random
-import logging
 
 
-@shared_task
-def test_task():
-#     logger.info("Test task executed")
-    return "Task completed"
 
 def send_advertisement_mail(ad_id, subject_, message_):
     ad = CarAdvertisement.objects.get(id=ad_id)
@@ -61,12 +55,3 @@ def send_deleted_mail_task(ad_id):
 def send_update_notification_task(ad_id):
     return send_advertisement_mail(ad_id, 'Updated', 'updated')
 
-
-# logger = logging.getLogger(__name__)
-
-# @shared_task
-# def send_verify_code_mail_task(email, verification_code):
-#     logger.info(f"Task started for sending verification code to {email}")
-#     print(f"Sending verification code to {email}")
-#     # Your email sending code here
-#     logger.info(f"Verification code sent to {email}")

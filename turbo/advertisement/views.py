@@ -7,10 +7,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .tasks import send_confirmation_mail_task, send_deleted_mail_task, send_update_notification_task, send_verify_code_mail_task, test_task
-from rest_framework import viewsets 
+from .tasks import *
+from rest_framework import viewsets, status
 from .serializers import CarSerializer, CarNameSerializer, CarModelSerializer, CategorySerializer, FuelTypeSerializer
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 verification_code = random.randint(100000, 999999)
@@ -31,19 +33,26 @@ def user_signup(request):
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
+        verify_form = VerificationForm
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             user_email = user.email
             if user:
-                login(request, user) 
                 verification_code = random.randint(100000, 999999)
-                send_verify_code_mail_task.delay(user, verification_code)
+                send_verify_code_mail_task.delay(user_email, verification_code)
                 request.session['verification_code'] = verification_code
                 request.session['username'] = username
                 request.session.save()
-                return redirect('verify')
+                
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
+                
+                # Store JWT in session
+                request.session['jwt'] = access_token
+                return redirect('verify') 
+            
     else:
         form = LoginForm()
     return render(request, 'advertisement/login.html', {'form': form})
@@ -96,7 +105,7 @@ def delete_car(request, id):
         if ad.user == request.user:
             ad.car_status = ad.REJECTED
             ad.save()
-            send_deleted_mail_task(ad.id)
+            send_deleted_mail_task.delay(ad.id)
             
         else:
             return render(request, 'advertisement/delete_message.html')
@@ -125,7 +134,6 @@ def car_details(request, id):
 def home(request):
     ad_cars = CarAdvertisement.objects.order_by('-created_at')
     cars_with_images = []
-    #test_task.delay()
     for car in ad_cars:
         if car.car_status == "APPROVE" and car.vip_car:
             first_image = car.images.first()
@@ -185,7 +193,7 @@ def add_advertisement(request):
             advertisement = form.save(commit=False)
             advertisement.user = request.user 
             advertisement.save()
-            send_confirmation_mail_task(advertisement.id)
+            send_confirmation_mail_task.delay(advertisement.id)
             for form in formset.cleaned_data:
                 if form:
                     image = form['image']
@@ -263,7 +271,7 @@ def edit_car(request, ad_id):
                 advertisement.user = request.user
                 advertisement.car_status = advertisement.PENDING
                 advertisement.save()
-                send_update_notification_task(advertisement.id)
+                send_update_notification_task.delay(advertisement.id)
                 formset.save() 
                 return redirect('details', ad_id)
             return redirect('details', ad_id)
@@ -304,3 +312,33 @@ class FuelTypeViewSet(viewsets.ModelViewSet):
     queryset = FuelType.objects.all()
     serializer_class = FuelTypeSerializer
 
+
+
+@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+def carmodel_view_api(request):
+    if request.method == 'GET':
+        car_model = CarModel.objects.all()
+        serializer = CarModelSerializer(car_model, many=True)
+        return Response({ 'msg': 'Successfully retrived data', 'data':serializer.data}, status=status.HTTP_200_OK)
+    
+    elif request.method == 'POST':
+        serializer = CarModelSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Car created successfully', 'data':serializer.data}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'PUT':
+        car_model = CarModel.objects.get(pk=request.data.get('id'))
+        serializer = CarModelSerializer(car_model, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Car model updated successfully', 'data':serializer.data}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        car_model = CarModel.objects.get(pk=request.data.get('id'))
+        car_model.delete()
+        return Response({'msg': 'Car model deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+    
+    return Response({'msg': 'Invalid  request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

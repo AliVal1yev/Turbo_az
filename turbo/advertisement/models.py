@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.core.validators import RegexValidator
 
 class Category(models.Model):
     name = models.CharField(max_length=32)
@@ -63,7 +63,17 @@ class CarAdvertisement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True)
     your_name = models.CharField(max_length=32)
-    phone_number = models.IntegerField(null=True)
+    phone_number = models.CharField(
+        max_length=14,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\+?1?\d{9,15}$', 
+                message="Phone number must be entered in the format: '+999999999'. Up to 14 digits allowed."
+            )
+        ]
+    )
     your_email = models.EmailField(max_length=32)
     car_status = models.CharField(
         max_length=32,

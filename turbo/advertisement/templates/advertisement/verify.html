@@ -1,14 +1,17 @@
-{% extends "base.html" %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify Code</title>
 </head>
 <body>
-    <h2>Enter Verification Code in your email message</h2>
+    <h2>Enter Verification Code from your email message</h2>
     <form method="POST">
+
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Verify</button>
     </form>
 </body>
-{% endblock %}
+
